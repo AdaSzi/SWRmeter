@@ -17,6 +17,9 @@ public:
     MCP342x::Config getStatusCh2() const; // Optional: to get full status if needed
     MCP342x::error_t getLastError() const;
 
+    bool getNewDataFlag() const { return newDataFlag; }
+    void resetNewDataFlag() { newDataFlag = false; }
+
 private:
     MCP342x adcDevice; // The MCP342x library object
 
@@ -24,6 +27,8 @@ private:
     const MCP342x::Mode adcMode = MCP342x::continuous;
     const MCP342x::Resolution adcResolution = MCP342x::resolution14; // Set to 14-bit
     const MCP342x::Gain adcGain = MCP342x::gain1;
+
+    bool newDataFlag;
 
     long rawValueCh1;
     long rawValueCh2;

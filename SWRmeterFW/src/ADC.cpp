@@ -1,5 +1,6 @@
 #include "ADC.h"
-#include "Arduino.h" //For millis(), delayMicroseconds()
+#include "Arduino.h"
+#include "globals.h"
 
 ADC::ADC(uint8_t i2cAddress) :
     adcDevice(i2cAddress), //Initialize the MCP342x object with the given address
@@ -13,7 +14,7 @@ ADC::ADC(uint8_t i2cAddress) :
 }
 
 bool ADC::initADC() {
-    //Wire.begin() should be called once in your main setup() function.
+    //Wire.begin() should be called in main setup()
 
     conversionTimePerChannelUs = adcResolution.getConversionTime();
 
@@ -70,14 +71,14 @@ void ADC::handleADC() {
         #endif
 
         MCP342x::Config recoveryCfgCh1(MCP342x::channel1, adcMode, adcResolution, adcGain);
-        adcDevice.configure(recoveryCfgCh1); //Attempt to recover
+        adcDevice.configure(recoveryCfgCh1);
         return;
     }
     if (!currentStatusCh1.isReady() || currentStatusCh1.getChannel() != MCP342x::channel1) {
         lastOperationError = MCP342x::errorConversionNotReady; 
 
         #ifdef DEBUG
-        Serial.println("ADC: CH1 data not ready or channel mismatch.");
+            Serial.println("ADC: CH1 data not ready or channel mismatch.");
         #endif
     }
 
@@ -88,7 +89,7 @@ void ADC::handleADC() {
         lastOperationError = currentOpError;
 
         #ifdef DEBUG
-        Serial.print("ADC: Error configuring for CH2: "); Serial.println(lastOperationError);
+            Serial.print("ADC: Error configuring for CH2: "); Serial.println(lastOperationError);
         #endif
 
         MCP342x::Config recoveryCfgCh1(MCP342x::channel1, adcMode, adcResolution, adcGain);
@@ -104,7 +105,7 @@ void ADC::handleADC() {
         lastOperationError = currentOpError;
 
         #ifdef DEBUG
-        Serial.print("ADC: Error reading CH2: "); Serial.println(lastOperationError);
+            Serial.print("ADC: Error reading CH2: "); Serial.println(lastOperationError);
         #endif
     }
      if (!currentStatusCh2.isReady() || currentStatusCh2.getChannel() != MCP342x::channel2) {
@@ -113,7 +114,7 @@ void ADC::handleADC() {
         }
 
         #ifdef DEBUG
-        Serial.println("ADC: CH2 data not ready or channel mismatch.");
+            Serial.println("ADC: CH2 data not ready or channel mismatch.");
         #endif
     }
 
@@ -124,9 +125,11 @@ void ADC::handleADC() {
         lastOperationError = currentOpError;
 
         #ifdef DEBUG
-        Serial.print("ADC: Error configuring for CH1 (next cycle): "); Serial.println(lastOperationError);
+            Serial.print("ADC: Error configuring for CH1 (next cycle): "); Serial.println(lastOperationError);
         #endif
     }
+
+    newDataFlag = true;
 }
 
 long ADC::getValueCh1() const {
