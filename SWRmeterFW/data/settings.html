@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+		body {
+			font-family: Arial, sans-serif;
+			margin: 20px;
+			padding: 20px;
+			justify-content: center;
+			align-items: center;
+		}
+
+		form {
+			max-width: 400px;
+			margin: auto;
+		}
+
+		h1 {
+			text-align: center;
+		}
+
+		label {
+			display: block;
+			margin-bottom: 8px;
+		}
+
+		input {
+			width: 100%;
+			padding: 8px;
+		}
+
+		.setting {
+			margin-bottom: 16px;
+		}
+
+		button {
+			padding: 10px 15px;
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			margin: 5px 5px 5px 0px;
+		}
+
+		.center {
+			margin: auto;
+			max-width: 400px;
+		}
+
+		button:hover {
+			color: white;
+			background-color: #45a049;
+		}
+
+		.redBtn {
+			color: white;
+			background-color: #ff5733;
+		}
+
+		.redBtn:hover {
+			background-color: #e5542e;
+		}
+
+		.greenBtn {
+			color: white;
+			background-color: #4caf50;
+		}
+
+		.greenBtn:hover {
+			background-color: #45a049;
+		}
+
+		.popup {
+			display: none;
+			position: fixed;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			background-color: rgba(0, 0, 0, 0.8);
+		}
+
+		.popup.shown {
+			display: block;
+		}
+
+		.popup-inside {
+			max-width: 400px;
+			margin: 0 auto;
+			background-color: #232428;
+			color: #eee;
+			line-height: 1.41;
+		}
+
+		.popup-contents {
+			padding: 1rem;
+		}
+
+		.popup-inner {
+			display: none;
+		}
+
+		.popup-inner.shown {
+			display: block;
+		}
+
+		.popup-close {
+			padding: 0.75rem 1rem;
+			text-align: right;
+			border-top: 1px solid rgba(255, 255, 255, 0.12);
+		}
+
+		.popup-close:hover {
+			text-decoration: underline;
+			cursor: pointer;
+		}
+	</style>
+	<title>Rotator WiFi Connection Setup</title>
+	<script src="./common.js"></script>
+</head>
+<body>
+<form id="wifiForm">
+	<h1>SWR Meter Setup</h1>
+	<h2>General settings</h2>
+	<div class="setting">
+		<label for="rotatorName">Device Name:</label>
+		<input id="rotatorName" type="text" name="rotatorName" title="Name of the Rotator. (eg. '20m Yagi')"/>
+	</div>
+	<div class="setting">
+		<label for="mDNS">Device mDNS domain:</label>
+		<div style="display: flex">
+			<input id="mDNS" type="text" name="mDNS"
+		       title="The domain which will be used to access the rotator interface. (eg. 'rotator20m')"/>
+			<span style="align-self: center; padding-left: 10px">.local</span>
+		</div>
+	</div>
+	<button type="submit" class="greenBtn" style="display: block">Save settings</button>
+	<p>Note that changes to mDNS domain name only apply after restart.</p><p>After you save your changes you can restart your device by going to <a href='/restart'>/restart</a>.</p>    
+</form>
+
+
+<div id="popup" class="popup">
+	<div class="popup-inside">
+		<div class="popup-contents">
+			<div class="popup-inner" data-handle="lostconnection">
+				<p>
+					Connection to device has been lost. Trying to reconnect.
+				</p>
+			</div>
+		</div>
+		<div class="popup-close">close</div>
+	</div>
+</div>
+
+<script>
+	const rotatorNotifier = new RotatorNotifier();
+	const webSocket = new RotatorSocket(rotatorNotifier);
+
+	const form = document.querySelector('#wifiForm');
+	form.addEventListener('submit', event => {
+		event.preventDefault();
+
+		const formData = new FormData(form);
+		webSocket.send({
+			settings: Object.fromEntries(formData),
+		});
+	});
+
+	async function updateFields() {
+		const response = await fetch(`http://${window.location.hostname}/config`);
+		const data = await response.json();
+
+		if (!data.settings) {
+			console.error("Settings not found in /config", data);
+			return;
+		}
+
+		for (const [key, value] of Object.entries(data.settings)) {
+			form.elements[key].value = value;
+		}
+	}
+
+	updateFields();
+
+	webSocket.setupWebSocket();
+	webSocket.on('message', (_this, msg) => {
+		if (msg.settings) {
+			updateFields();
+		}
+	});
+</script>
+</body>
+</html>

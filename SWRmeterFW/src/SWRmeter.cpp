@@ -18,6 +18,10 @@ SWRmeter::SWRmeter(uint8_t adcI2Caddr, float* swrOutput):
     }
 }
 
+void SWRmeter::initSWRmeter(){
+    adc.initADC();
+}
+
 void SWRmeter::handleSWRmeter(){
     adc.handleADC();
 

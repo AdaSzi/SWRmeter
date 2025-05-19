@@ -2,6 +2,7 @@
 #define GLOBALS_H
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include "storage.h"
 #include "SWRmeter.h"
 
 #define LED_PIN 8
@@ -13,13 +14,16 @@
 
 #define WEBSOCKET_UPDATE_INTERVAL 1000
 
+#define DEFAULT_MDNS "swr"
+#define SETUP_WIFI_SSID "SWRmeter_Setup"
+
 struct GlobalData {
     float currentSWR = 0;
-    bool isMoving = false;
+    uint16_t numClients = 0;
 
     bool operator == (const GlobalData& other) const {
         return currentSWR == other.currentSWR
-               //&& targetAzimuth == other.targetAzimuth
+               && numClients == other.numClients
                //&& currentSpeed == other.currentSpeed
                //&& isMoving == other.isMoving
                ;
@@ -40,5 +44,6 @@ extern SWRmeter swrMeter;
 void applyLiveSettings();
 void ledBlink(uint16_t period);
 void restart();
+void checkButton();
 
 #endif

@@ -37,7 +37,6 @@ private:
     MCP342x::error_t lastOperationError;
 
     unsigned long conversionTimePerChannelUs;
-    unsigned long lastUpdateTimeMs;
     unsigned long updateIntervalMs; // Time between full dual-channel read cycles
 };
 

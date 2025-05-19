@@ -1,2 +1,4 @@
 /SWRmeterFW/.vscode
 SWRmeterFW/test/README
+SWRmeterFW/data/config.json
+SWRmeterFW/data/WiFiConfig.json

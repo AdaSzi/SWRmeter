@@ -8,7 +8,6 @@ ADC::ADC(uint8_t i2cAddress) :
     rawValueCh2(0),
     lastOperationError(MCP342x::errorNone),
     conversionTimePerChannelUs(0),
-    lastUpdateTimeMs(0),
     updateIntervalMs(50) { //Default update interval, will be refined in initReader
     //Constructor
 }
@@ -49,15 +48,15 @@ bool ADC::initADC() {
         Serial.println("ADC: Initialization complete. CH1 configured and first conversion awaited.");
     #endif
     
-    lastUpdateTimeMs = millis();
     return true;
 }
 
 void ADC::handleADC() {
-    if (millis() - lastUpdateTimeMs < updateIntervalMs) {
-        return; 
+    static unsigned long nextUpdate = 0;
+    if (millis() < nextUpdate) {
+        return;
     }
-    lastUpdateTimeMs = millis();
+    nextUpdate = millis() + updateIntervalMs;
 
     MCP342x::error_t currentOpError;
 

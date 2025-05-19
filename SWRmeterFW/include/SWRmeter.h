@@ -6,6 +6,7 @@
 class SWRmeter{
     public:
         SWRmeter(uint8_t adcI2Caddr, float* swrOutput);
+        void initSWRmeter();
         void handleSWRmeter();
 
 

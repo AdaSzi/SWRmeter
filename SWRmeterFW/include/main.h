@@ -4,6 +4,5 @@
 #include <ArduinoJson.h>
 
 void restart();
-void checkButton();
 
 #endif

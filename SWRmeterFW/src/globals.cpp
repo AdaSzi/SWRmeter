@@ -28,3 +28,26 @@ void restart(){
   delay(1000);
   ESP.restart();
 }
+
+void checkButton() {
+  static unsigned long buttonStartTime = 0;
+  static bool buttonHeld = false;
+
+  if (!digitalRead(BUTTON_PIN)) {
+    if (!buttonHeld) {
+      buttonStartTime = millis();
+      buttonHeld = true;
+    }
+    else {
+      unsigned long currentTime = millis();
+      if (currentTime - buttonStartTime >= BUTTON_HOLD_RESET_TIME) {
+        deleteConfig("/config.json");
+        deleteConfig("/WiFiConfig.json");
+        delay(1000);
+        restart();
+        buttonHeld = false;
+      }
+    }
+  }
+  else buttonHeld = false;
+}

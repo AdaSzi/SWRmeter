@@ -2,66 +2,50 @@
 #include "main.h"
 #include "globals.h"
 #include "ADC.h"
+#include "storage.h"
+#include "wifiHandler.h"
+#include "webserverHandler.h"
 
 
 void setup() {
-  pinMode(LED_PIN, OUTPUT);
-  pinMode(BUTTON_PIN, INPUT_PULLUP);
-  
-  digitalWrite(LED_PIN, HIGH);
-  delay(250);
-  digitalWrite(LED_PIN, LOW);
-  delay(250);
-  digitalWrite(LED_PIN, HIGH);
-  delay(250);
-  digitalWrite(LED_PIN, LOW);
-  delay(250);
+    pinMode(LED_PIN, OUTPUT);
+    pinMode(BUTTON_PIN, INPUT_PULLUP);
+    
+    digitalWrite(LED_PIN, HIGH);
+    delay(250);
+    digitalWrite(LED_PIN, LOW);
+    delay(250);
+    digitalWrite(LED_PIN, HIGH);
+    delay(250);
+    digitalWrite(LED_PIN, LOW);
+    delay(250);
 
-  #ifdef DEBUG
-    Serial.begin(115200);
-    Serial.println("Starting SWR meter");
-  #endif
-
-  Wire.begin();
+    #ifdef DEBUG
+        Serial.begin(115200);
+        Serial.println("Starting SWR meter");
+    #endif
 
 
-  /*if(!initStorage()){
-    setupMode();
-  }
+    if(!initStorage()){
+        setupMode();
+    }
 
-  applyLiveSettings();
-  initWifi();
+    applyLiveSettings();
+    initWifi();
 
-  initWebServer();
-*/
+    initWebServer();
 
-
+    Wire.begin();
+    swrMeter.initSWRmeter();
 }
 
 void loop() {
   swrMeter.handleSWRmeter();
+
+  handleWifi();
+  handleWebServer();
+  checkButton();
   
-  Serial.println(globalData.currentSWR);
+  ledBlink(500);
 }
 
-void checkButton() {
-  static unsigned long buttonStartTime = 0;
-  static bool buttonHeld = false;
-
-  if (!digitalRead(BUTTON_PIN)) {
-    if (!buttonHeld) {
-      buttonStartTime = millis();
-      buttonHeld = true;
-    }
-    else {
-      unsigned long currentTime = millis();
-      if (currentTime - buttonStartTime >= BUTTON_HOLD_RESET_TIME) {
-        //deleteConfig("/config.json");
-        //deleteConfig("/WiFiConfig.json");
-        restart();
-        buttonHeld = false;
-      }
-    }
-  }
-  else buttonHeld = false;
-}
