@@ -25,7 +25,6 @@ html {
 	font-size: 16px;
 	background: black;
 	color: white;
-	background-size: cover;
 	height: 100%;
 }
 body {
@@ -50,7 +49,7 @@ a {
 	color: rgba(127, 127, 127, 0.8);
 }
 .container {
-	padding: 5rem 1rem 8rem 1rem; 
+	padding: 5rem 1rem 8rem 1rem;
 	height: 100%;
     box-sizing: border-box;
     overflow: hidden;
@@ -76,7 +75,7 @@ a {
 }
 .btn_icon {
 	height: 50%;
-	width: 100%; 
+	width: 100%;
 }
 
 .status {
@@ -87,13 +86,13 @@ a {
     width: 100%;
     z-index: 10;
 }
-.position { 
+.position {
 	padding-bottom: 0.5rem;
 	text-transform: uppercase;
 	text-align: center;
 	display: flex;
 	width: 100%;
-	justify-content: center; 
+	justify-content: center;
 }
 .position > div > div:last-child {
     font-size: 30px;
@@ -107,20 +106,20 @@ a {
     height: 4rem;
 }
 
-.options > * { 
+.options > * {
     flex-grow: 1;
-    flex-shrink: 1; 
-    flex-basis: 0;  
-    display: flex;  
-    align-items: center; 
-    justify-content: center; 
-    padding: 0 0.1em; 
-    min-width: 0; 
-    overflow: hidden; 
+    flex-shrink: 1;
+    flex-basis: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.1em;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .clients-display-wrapper {
-    gap: 0.2em; 
+    gap: 0.2em;
     cursor: default;
     min-width: 0;
     display: flex;
@@ -139,25 +138,25 @@ a {
 #div-client-icon-placeholder .btn_icon,
 #div-status-indicator .btn_icon,
 #btn-info .btn_icon {
-    height: 60%; 
+    height: 60%;
     max-height: 1.6rem;
-    width: auto;   
+    width: auto;
     object-fit: contain;
 }
 
 #statusBarClientsCount {
-    font-size: 0.9rem; 
+    font-size: 0.9rem;
     color: #E0E0E0;
-    text-align: left; 
-    white-space: nowrap; 
-    line-height: 1; 
+    text-align: left;
+    white-space: nowrap;
+    line-height: 1;
     flex-shrink: 10;
     min-width: 0;
     overflow: hidden;
     text-overflow: clip;
 }
 
-.indicator-icon-wrapper { 
+.indicator-icon-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -173,7 +172,7 @@ a {
 }
 
 
-.popup { display: none; position: fixed; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.8); }
+.popup { display: none; position: fixed; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.8); z-index: 20;}
 .popup.shown { display: block; }
 .popup-inside { max-width: 400px; margin: 0 auto; background-color: #232428; color: #eee; line-height: 1.41; }
 .popup-contents { padding: 1rem; }
@@ -183,8 +182,8 @@ a {
 .popup-close:hover { text-decoration: underline; cursor: pointer; }
 
 .swr-meter-container {
-    position: relative; 
-    width: 100%;    
+    position: relative;
+    width: 100%;
     height: 100%;
     text-align: center;
     display: flex;
@@ -197,7 +196,7 @@ a {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%; 
+    width: 100%;
     height: 100%;
     pointer-events: none;
 }
@@ -225,10 +224,10 @@ a {
 	<div id="swrMeter" class="swr-meter-container">
 		<div id="scaleBackground" class="swr-meter_scale-background">
 			<svg class="swr-meter_scale-dial" viewBox="0 0 130 130" version="1.1"
-				xmlns="http://www.w3.org/2000/svg"></svg> 
+				xmlns="http://www.w3.org/2000/svg"></svg>
 		</div>
 		<div class="indicator-needle">
-			<svg viewBox="0 0 130 130" version="1.1" xmlns="http://www.w3.org/2000/svg"> 
+			<svg viewBox="0 0 130 130" version="1.1" xmlns="http://www.w3.org/2000/svg">
 				<polyline points="60,65 70,65 65,15" fill="#b60000" />
 				<circle cx="65" cy="65" r="5" stroke="none" fill="#b60000" />
 			</svg>
@@ -317,36 +316,18 @@ class SWRMeterDisplay {
 		this.socket = socket;
 		this.swrMeterElement = swrMeterElement;
 
-		if (!this.swrMeterElement) {
-			console.error("SWRMeterDisplay Error: swrMeterElement is null in constructor.");
-		}
-		this.needleDivElement = this.swrMeterElement ? this.swrMeterElement.querySelector('.indicator-needle') : null; 
-		if (!this.needleDivElement && this.swrMeterElement) {
-            console.error("SWRMeterDisplay Error: Could not find '.indicator-needle' within swrMeterElement.");
-        }
+		this.needleDivElement = this.swrMeterElement ? this.swrMeterElement.querySelector('.indicator-needle') : null;
 		
 		this.currentSWRElement = document.getElementById('currentSWR');
-        this.statusBarClientsCountElement = document.getElementById('statusBarClientsCount'); 
+        this.statusBarClientsCountElement = document.getElementById('statusBarClientsCount');
         this.statusIndicatorIconElement = document.getElementById('statusIndicatorIcon');
         
-        if (!this.statusIndicatorIconElement) {
-            console.error("SWRMeterDisplay Error: Element with ID 'statusIndicatorIcon' not found.");
-        }
         this.statusIndicatorCircle = this.statusIndicatorIconElement ? this.statusIndicatorIconElement.querySelector('circle') : null;
-		if (!this.statusIndicatorCircle && this.statusIndicatorIconElement) {
-            console.error("SWRMeterDisplay Error: Could not find 'circle' within statusIndicatorIconElement.");
-        }
-
-        if (!this.currentSWRElement) console.error("SWRMeterDisplay Error: Element 'currentSWR' not found.");
-        if (!this.statusBarClientsCountElement) console.error("SWRMeterDisplay Error: Element 'statusBarClientsCount' not found.");
-
 
 		if (this.socket) {
             this.socket.on('message', (socket_ref, data) => {
                 this._handleSocketMessage(data);
             });
-        } else {
-            console.warn("SWRMeterDisplay: Socket not provided in constructor.");
         }
         this.updateReadings(SWR_MIN, 0);
 	}
@@ -356,7 +337,7 @@ class SWRMeterDisplay {
     }
 
 	_rotateNeedle(angle) {
-		if (this.needleDivElement) { 
+		if (this.needleDivElement) {
             this.needleDivElement.style.transform = `rotateZ(${angle}deg)`;
         }
 	}
@@ -396,7 +377,6 @@ class SWRMeterDisplay {
 
 const createScale = svgElement => {
     if (!svgElement) {
-        console.error("createScale Error: svgElement is null. Scale will not be drawn.");
         return;
     }
     svgElement.innerHTML = '';
@@ -460,9 +440,7 @@ createScale(scaleSvgElement);
 async function updateHeader() {
     try {
         const response = await fetch(`http://${window.location.hostname}/config`);
-        if (!response.ok) {
-             console.warn(`Config fetch failed with status: ${response.status}`);
-        } else {
+        if (response.ok) {
             const data = await response.json();
             if (data.settings && data.settings.meterName) {
                 document.getElementById('meterTitle').innerText = data.settings.meterName;
@@ -475,7 +453,6 @@ async function updateHeader() {
             }
         }
     } catch (error) {
-        console.warn("Could not fetch/parse config for title:", error);
     }
     document.getElementById('meterTitle').innerText = "SWR Meter";
     document.title = "SWR Meter";
