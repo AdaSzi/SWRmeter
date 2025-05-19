@@ -6,7 +6,7 @@
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="theme-color" content="#000000">
-	<link rel="icon" sizes="192x192" href="/favicon.png">
+	<link rel="icon" sizes="140x140" href="/favicon.png">
 	<title>SWR Meter</title>
 	<style>
 @font-face {
@@ -442,9 +442,9 @@ async function updateHeader() {
         const response = await fetch(`http://${window.location.hostname}/config`);
         if (response.ok) {
             const data = await response.json();
-            if (data.settings && data.settings.meterName) {
-                document.getElementById('meterTitle').innerText = data.settings.meterName;
-                document.title = data.settings.meterName;
+            if (data.settings && data.settings.deviceName) {
+                document.getElementById('meterTitle').innerText = data.settings.deviceName;
+                document.title = data.settings.deviceName;
                 return;
             } else if (data.settings && data.settings.rotatorName) {
                  document.getElementById('meterTitle').innerText = data.settings.rotatorName + " (SWR)";

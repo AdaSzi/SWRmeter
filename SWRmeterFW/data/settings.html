@@ -3,6 +3,11 @@
 <head>
 	<meta charset="UTF-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="theme-color" content="#000000">
+	<link rel="icon" sizes="140x140" href="/favicon.png">
+	<title>SWR meter Setup</title>
+	<script src="./common.js"></script>
 	<style>
 		* {
 			box-sizing: border-box;
@@ -119,22 +124,20 @@
 			cursor: pointer;
 		}
 	</style>
-	<title>Rotator WiFi Connection Setup</title>
-	<script src="./common.js"></script>
 </head>
 <body>
 <form id="wifiForm">
 	<h1>SWR Meter Setup</h1>
 	<h2>General settings</h2>
 	<div class="setting">
-		<label for="rotatorName">Device Name:</label>
-		<input id="rotatorName" type="text" name="rotatorName" title="Name of the Rotator. (eg. '20m Yagi')"/>
+		<label for="deviceName">Device Name:</label>
+		<input id="deviceName" type="text" name="deviceName" title="Name of the Device. (eg. 'SWR meter 2m')"/>
 	</div>
 	<div class="setting">
 		<label for="mDNS">Device mDNS domain:</label>
 		<div style="display: flex">
 			<input id="mDNS" type="text" name="mDNS"
-		       title="The domain which will be used to access the rotator interface. (eg. 'rotator20m')"/>
+		       title="The domain which will be used to access the SWR meter interface. (eg. 'swr20m')"/>
 			<span style="align-self: center; padding-left: 10px">.local</span>
 		</div>
 	</div>
