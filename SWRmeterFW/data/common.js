@@ -50,7 +50,7 @@ class RotatorSocket {
         this.socket = null;
         this.messageTimeout = null;
 
-        //this.gateway = `ws://swr.local/ws`;
+        //this.gateway = `ws://swr2m.local/ws`;
         this.gateway = `ws://${window.location.hostname}/ws`;
     }
 

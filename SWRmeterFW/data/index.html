@@ -7,7 +7,7 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="theme-color" content="#000000">
 	<link rel="icon" sizes="192x192" href="/favicon.png">
-	<title>Rotator</title>
+	<title>SWR Meter</title>
 	<style>
 @font-face {
 	font-family: Muli, sans-serif;
@@ -40,23 +40,25 @@ header {
 	top: 0;
 	right: 0;
 	left: 0;
+    z-index: 10;
 }
 a {
 	color: inherit;
 }
 .label {
-	font-size: 0.5rem;
+	font-size: 0.75rem;
 	color: rgba(127, 127, 127, 0.8);
 }
 .container {
-	padding: 5rem 1rem 8rem 1rem;
+	padding: 5rem 1rem 8rem 1rem; 
 	height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .buttonrow button {
 	border: 0;
 	color: white;
-	cursor: pointer;
 	text-align: center;
 	height: 4rem;
 	background-color: transparent;
@@ -68,22 +70,13 @@ a {
 }
 .buttonrow button svg * {
 	transition: fill 0.5s ease-out 0s;
-	/*fill: rgba(127, 127, 127, 0.5);*/
 }
 .buttonrow button:active {
 	background-color: rgba(127, 127, 127, 0.5);
 }
-.buttonrow button .btn_icon {
+.btn_icon {
 	height: 50%;
-	width: 100%;
-}
-.buttonrow button .btn_icon-active,
-.buttonrow button .btn.active .btn_icon-inactive {
-	display: none;
-}
-.buttonrow button .btn_icon-inactive,
-.buttonrow button .btn.active .btn_icon-active{
-	display: block;
+	width: 100%; 
 }
 
 .status {
@@ -91,168 +84,181 @@ a {
 	left: 0;
 	right: 0;
 	bottom: 0;
+    width: 100%;
+    z-index: 10;
 }
-.position {
+.position { 
 	padding-bottom: 0.5rem;
 	text-transform: uppercase;
 	text-align: center;
 	display: flex;
 	width: 100%;
-	justify-content: space-evenly;
+	justify-content: center; 
 }
+.position > div > div:last-child {
+    font-size: 30px;
+}
+
 .options {
 	display: flex;
 	width: 100%;
 	border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-.options button {
-	flex-grow: 1;
-}
-
-.popup {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
-	background-color: rgba(0, 0, 0, 0.8);
-}
-.popup.shown {
-	display: block;
-}
-.popup-inside {
-	max-width: 400px;
-	margin: 0 auto;
-	background-color: #232428;
-	color: #eee;
-	line-height: 1.41;
-}
-.popup-contents {
-	padding: 1rem;
-}
-.popup-inner {
-	display: none;
-}
-.popup-inner.shown {
-	display: block;
-}
-.popup-close {
-	padding: 0.75rem 1rem;
-	text-align: right;
-	border-top: 1px solid rgba(255, 255, 255, 0.12);
-}
-.popup-close:hover {
-	text-decoration: underline;
-	cursor: pointer;
+    align-items: stretch;
+    height: 4rem;
 }
 
-.compass {
-	position: relative;
-	width: 100%;
-	height: 100%;
-	text-align: center;
-}
-.compass_rose {
-	position: absolute;
-	pointer-events: none;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-}
-.compass_rose svg {
-	width: 100%;
-	height: 100%;
-}
-.compass_rose_dial polyline {
-	fill: white;
-}
-.compass_rose_dial line {
-	stroke: #cfaf00;
+.options > * { 
+    flex-grow: 1;
+    flex-shrink: 1; 
+    flex-basis: 0;  
+    display: flex;  
+    align-items: center; 
+    justify-content: center; 
+    padding: 0 0.1em; 
+    min-width: 0; 
+    overflow: hidden; 
 }
 
-.compass .indicator-azimuth {
-	transition: transform .2s linear;
+.clients-display-wrapper {
+    gap: 0.2em; 
+    cursor: default;
+    min-width: 0;
+    display: flex;
+    align-items: center;
 }
-.compass_rose_dial text,
-.compass .azimuth-label {
-	fill: #cfaf00;
-	font-size: 4px;
-	text-anchor: middle;
-	dominant-baseline: central;
-	font-weight: bold;
+
+.clients-display-wrapper > .indicator-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    flex-shrink: 1;
+    min-width: 0;
 }
-.compass .azimuth-label {
-	fill: white;
-	font-size: 5px;
+
+#div-client-icon-placeholder .btn_icon,
+#div-status-indicator .btn_icon,
+#btn-info .btn_icon {
+    height: 60%; 
+    max-height: 1.6rem;
+    width: auto;   
+    object-fit: contain;
+}
+
+#statusBarClientsCount {
+    font-size: 0.9rem; 
+    color: #E0E0E0;
+    text-align: left; 
+    white-space: nowrap; 
+    line-height: 1; 
+    flex-shrink: 10;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: clip;
+}
+
+.indicator-icon-wrapper { 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    cursor: default !important;
+}
+
+.indicator-icon-wrapper:active {
+    background-color: transparent !important;
+}
+#btn-info {
+    cursor: pointer;
+}
+
+
+.popup { display: none; position: fixed; top: 0; left: 0; bottom: 0; right: 0; background-color: rgba(0, 0, 0, 0.8); }
+.popup.shown { display: block; }
+.popup-inside { max-width: 400px; margin: 0 auto; background-color: #232428; color: #eee; line-height: 1.41; }
+.popup-contents { padding: 1rem; }
+.popup-inner { display: none; }
+.popup-inner.shown { display: block; }
+.popup-close { padding: 0.75rem 1rem; text-align: right; border-top: 1px solid rgba(255, 255, 255, 0.12); }
+.popup-close:hover { text-decoration: underline; cursor: pointer; }
+
+.swr-meter-container {
+    position: relative; 
+    width: 100%;    
+    height: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.swr-meter_scale-background,
+.indicator-needle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; 
+    height: 100%;
+    pointer-events: none;
+}
+
+.swr-meter_scale-background svg,
+.indicator-needle svg {
+    width: 100%;
+    height: 100%;
+}
+.swr-meter_scale-dial line, .swr-meter_scale-dial path { stroke: #cfaf00; }
+.swr-meter_scale-dial text { fill: #cfaf00; font-size: 4px; text-anchor: middle; dominant-baseline: middle; font-weight: bold; }
+.indicator-needle {
+    transition: transform .2s linear;
+    filter: drop-shadow(0px 0px 5px #000);
 }
 	</style>
 	<script src="./common.js"></script>
 </head>
 <body>
 <header>
-	<h1 id="rotatorTitle">Unnamed Rotator</h1>
+	<h1 id="meterTitle">SWR Meter</h1>
 </header>
 
 <div class="container">
-	<div id="compass" class="compass">
-		<div id="rose" class="compass_rose">
-			<svg class="compass_rose_dial" viewBox="0 0 130 130" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>
+	<div id="swrMeter" class="swr-meter-container">
+		<div id="scaleBackground" class="swr-meter_scale-background">
+			<svg class="swr-meter_scale-dial" viewBox="0 0 130 130" version="1.1"
+				xmlns="http://www.w3.org/2000/svg"></svg> 
 		</div>
-		<div class="indicator-target compass_rose">
-			<svg viewBox="0 0 130 130" version="1.1" xmlns="http://www.w3.org/2000/svg">
-				<polyline points="60,58  70,58  65,15" fill="white"/>
-				<circle cx="65" cy="65" r="10" stroke="none" fill="#b60000"/>
-			</svg>
-		</div>
-		<div class="indicator-azimuth compass_rose" style="filter: drop-shadow(0px 0px 5px #000)">
-			<svg viewBox="0 0 130 130" version="1.1" xmlns="http://www.w3.org/2000/svg">
-				<polyline points="60,58  70,58  65,15" fill="#b60000"/>
-				<circle cx="65" cy="65" r="10" stroke="none" fill="#b60000"/>
-			</svg>
-		</div>
-		<div class="compass_rose">
-			<svg viewBox="0 0 130 130" version="1.1" xmlns="http://www.w3.org/2000/svg">
-				<text class="azimuth-label" x="65" y="65">0</text>
+		<div class="indicator-needle">
+			<svg viewBox="0 0 130 130" version="1.1" xmlns="http://www.w3.org/2000/svg"> 
+				<polyline points="60,65 70,65 65,15" fill="#b60000" />
+				<circle cx="65" cy="65" r="5" stroke="none" fill="#b60000" />
 			</svg>
 		</div>
 	</div>
 </div>
 
 <div class='status'>
-	<div class='position'>
+    <div class='position'>
 		<div>
-			<div class='label'>Azimuth</div>
-			<div id='currentAzimuth'>N/A</div>
-		</div>
-		<div>
-			<div class='label'>Target</div>
-			<div id='targetAzimuth'>N/A</div>
-		</div>
-		<div>
-			<div class='label'>Speed</div>
-			<div id='rotationSpeed'>N/A</div>
+			<div class='label'>SWR</div>
+			<div id='currentSWR'>N/A</div>
 		</div>
 	</div>
-
 	<div class="options buttonrow">
-		<button id="btn-lock-orientation">
-			<svg class="btn_icon btn_icon-inactive" xmlns="http://www.w3.org/2000/svg" width="512" height="512" xml:space="preserve" viewBox="0 0 512 512">
-				<path d="M256 90a166 166 0 1 1 0 332 166 166 0 0 1 0-332m0-40a206 206 0 1 0 0 412 206 206 0 0 0 0-412zm103 193v104H211V243h148zm-120-47v32h25v-32a55 55 0 0 0-111 0v32h25v-32a30 30 0 0 1 61 0z" fill="#fff"/>
+        <div class="clients-display-wrapper">
+            <div id="div-client-icon-placeholder" class="indicator-icon-wrapper" title="Connected Clients">
+                <svg class="btn_icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="28px" height="28px">
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+            </div>
+            <span id="statusBarClientsCount">N/A</span>
+        </div>
+		<div id="div-status-indicator" class="indicator-icon-wrapper" title="SWR Status">
+			<svg class="btn_icon" id="statusIndicatorIcon" xmlns="http://www.w3.org/2000/svg" width="512" height="512" xml:space="preserve" viewBox="0 0 512 512">
+				<circle cx="256" cy="256" r="100" fill="rgba(0, 255, 0, 0.5)" />
 			</svg>
-			<svg class="btn_icon btn_icon-active" xmlns="http://www.w3.org/2000/svg" width="512" height="512" xml:space="preserve" viewBox="0 0 512 512">
-				<path fill="#fff" d="M256 90a166 166 0 1 1 0 332 166 166 0 0 1 0-332m0-40a206 206 0 1 0 0 412 206 206 0 0 0 0-412zm-55 178v-32a56 56 0 0 1 112 0v32h-25v-32a31 31 0 0 0-62 0v32h-25zm-19 15v105h150V243H182z"/>
-			</svg>
-		</button>
-
-		<button id="btn-movementIndicator">
-			<svg class="btn_icon" id="movementIndicator" xmlns="http://www.w3.org/2000/svg" width="512" height="512" xml:space="preserve" viewBox="0 0 512 512">
-				<path fill="#fff" d="M256 156a100 100 0 1 0 0 200 100 100 0 0 0 0-200zm0 160a60 60 0 1 1 0-120 60 60 0 0 1 0 120zM151 179l-55-55 28-28 55 55c-11 8-20 17-28 28zm181-28 56-55 28 28-55 56c-8-11-18-21-29-29zM127 276H50v-40h77a130 130 0 0 0 0 40zm109-149V50h40v78a130 130 0 0 0-40-1zm-57 234-55 55-28-28 55-55c8 11 17 20 28 28zm283-125v40h-78a130 130 0 0 0 0-40h78zM276 384v78h-40v-77a130 130 0 0 0 40-1zm85-52 55 56-28 28-56-55c11-8 21-18 29-29z"/>
-			</svg>
-		</button>
-
-		<button id="btn-info" class="btn-popup" data-name='info'>
+		</div>
+		<button id="btn-info" class="btn-popup" data-name='info' title="Information">
 			<svg class="btn_icon" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="512" height="512" viewBox="0 0 512 512">
 				<path fill="#fff" d="M256 90a166 166 0 1 1 0 332 166 166 0 1 1 0-332m0-40a206 206 0 1 0 0 412 206 206 0 0 0 0-412zm29.8 317.6h-57.6v-137h57.6v137zM257 202.3a31.7 31.7 0 1 1 0-63.5 31.7 31.7 0 0 1 0 63.5z"/>
 			</svg>
@@ -260,16 +266,15 @@ a {
 	</div>
 </div>
 
-
 <div id="popup" class="popup">
 	<div class="popup-inside">
 		<div class="popup-contents">
 			<div class="popup-inner" data-handle="info">
-				<p>This is the antenna rotator interface for <a href='https://om3kff.sk'>OM3KFF</a>.</p>
-				<p>See the <a href='/status'>status page</a> for info about this controller.</p>
-				<p>You can change the settings in the <a href='/settings'>settings page</a>.</p>
-				<p>This project's GUI is based on <a href='https://github.com/lamplightdev/compass'>Chris Haynes'
+				<p>This is the SWR meter interface.</p>
+				<p>GUI inspired by various SWR meter designs and based on <a href='https://github.com/lamplightdev/compass'>Chris Haynes'
 					work</a>.</p>
+                <p>See the <a href='/status'>status page</a> for info about the meter.</p>
+				<p>You can change settings of the meter in the <a href='/settings'>settings page</a>.</p>
 			</div>
 			<div class="popup-inner" data-handle="lostconnection">
 				<p>
@@ -280,323 +285,226 @@ a {
 		<div class="popup-close">close</div>
 	</div>
 </div>
-
 <script>
 (function () {
 "use strict";
 
-class RotatorWindow {
-	constructor(btnLockOrientation) {
-		this.btnLockOrientation = btnLockOrientation;
+const SWR_MIN = 1.0;
+const SWR_PRACTICAL_INFINITY = 25.0;
+const SCALE_START_ANGLE = -70.0;
+const SCALE_END_ANGLE = 70.0;
+const SWR_INDICATE_LOW = 1.5;
+const SWR_INDICATE_HIGH = 3.0;
 
-		this.isOrientationLocked = false;
-		this.isOrientationLockable = false;
+const SWR_TICKS = [
+    { value: 1.0, label: "1" }, { value: 1.1 }, { value: 1.2 }, { value: 1.3 }, { value: 1.4 },
+    { value: 1.5, label: "1.5" }, { value: 1.7 }, { value: 2.0, label: "2" }, { value: 2.5 },
+    { value: 3.0, label: "3" }, { value: 4.0 }, { value: 5.0, label: "5" }, { value: 7.0 },
+    { value: 10.0, label: "10" }, { value: SWR_PRACTICAL_INFINITY, label: "∞" }
+];
 
-		document.addEventListener("fullscreenchange", this.onFullscreenChange.bind(this));
-		document.addEventListener("webkitfullscreenchange", this.onFullscreenChange.bind(this));
-		this.btnLockOrientation.addEventListener("click", this.toggleOrientationLock.bind(this));
-
-		this.checkLockable();
-	}
-
-	// browser diagnostic orientation
-	getBrowserOrientation() {
-		let orientation;
-		if (screen.orientation && screen.orientation.type) {
-			orientation = screen.orientation.type;
-		} else {
-			orientation = screen.orientation || screen.mozOrientation || screen.msOrientation;
-		}
-
-		/*
-		'portait-primary':      for (screen width < screen height, e.g. phone, phablet, small tablet)
-									device is in 'normal' orientation
-								for (screen width > screen height, e.g. large tablet, laptop)
-									device has been turned 90deg clockwise from normal
-
-		'portait-secondary':    for (screen width < screen height)
-									device has been turned 180deg from normal
-								for (screen width > screen height)
-									device has been turned 90deg anti-clockwise (or 270deg clockwise) from normal
-
-		'landscape-primary':    for (screen width < screen height)
-									device has been turned 90deg clockwise from normal
-								for (screen width > screen height)
-									device is in 'normal' orientation
-
-		'landscape-secondary':  for (screen width < screen height)
-									device has been turned 90deg anti-clockwise (or 270deg clockwise) from normal
-								for (screen width > screen height)
-									device has been turned 180deg from normal
-		*/
-
-		return orientation;
-	}
-
-	getBrowserFullscreenElement() {
-		return (document.fullscreenElement || document.webkitFullscreenElement);
-	}
-
-	browserRequestFullscreen() {
-		(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)();
-	}
-
-	browserExitFullscreen() {
-		(document.exitFullscreen || document.webkitExitFullscreen)();
-	}
-
-	browserUnlockOrientation() {
-		if (screen.orientation && screen.orientation.unlock) {
-			screen.orientation.unlock();
-		} else if (screen.unlockOrientation) {
-			screen.unlockOrientation();
-		}
-	}
-
-	checkLockable() {
-		if (!(screen.orientation && screen.orientation.lock)) {
-			this.toggleOrientationLockable(false);
-			return;
-		}
-
-		screen.orientation.lock(this.getBrowserOrientation()).then(() => {
-			this.toggleOrientationLockable(true);
-			this.browserUnlockOrientation();
-		}).catch(event => {
-			if (event.code === 18) { // The page needs to be fullscreen in order to call lockOrientation(), but is lockable
-				this.toggleOrientationLockable(true);
-				this.browserUnlockOrientation();
-			} else { // lockOrientation() is not available on this device (or other error)
-				this.toggleOrientationLockable(false);
-			}
-		});
-	}
-
-	lockOrientationRequest(doLock) {
-		if (!this.isOrientationLockable)
-			return;
-
-		if (doLock) {
-			this.browserRequestFullscreen();
-			this.lockOrientation(true);
-		} else {
-			this.browserUnlockOrientation();
-			this.browserExitFullscreen();
-			this.lockOrientation(false);
-		}
-	}
-
-	lockOrientation(locked) {
-		if (locked) {
-			this.btnLockOrientation.classList.add("active");
-		} else {
-			this.btnLockOrientation.classList.remove("active");
-		}
-
-		this.isOrientationLocked = locked;
-	}
-
-	toggleOrientationLock() {
-		if (this.isOrientationLockable) {
-			this.lockOrientationRequest(!this.isOrientationLocked);
-		}
-	}
-
-	toggleOrientationLockable(lockable) {
-		this.isOrientationLockable = lockable;
-		if (this.isOrientationLockable) {
-			this.btnLockOrientation.style.display = 'block';
-		} else {
-			this.btnLockOrientation.style.display = 'none';
-		}
-	}
-
-	onFullscreenChange() {
-		if (this.isOrientationLockable && this.getBrowserFullscreenElement()) {
-			if (screen.orientation && screen.orientation.lock) {
-				screen.orientation.lock(this.getBrowserOrientation()).then(function () {
-				}).catch(function () {
-				});
-			}
-		} else {
-			this.lockOrientationRequest(false);
-		}
-	}
+function swrToAngleUtil(swr) {
+    if (swr <= SWR_MIN) return SCALE_START_ANGLE;
+    if (swr >= SWR_PRACTICAL_INFINITY) return SCALE_END_ANGLE;
+    const gamma = (swr - 1) / (swr + 1);
+    const gammaMax = (SWR_PRACTICAL_INFINITY - 1) / (SWR_PRACTICAL_INFINITY + 1);
+    const normalizedGamma = gammaMax === 0 ? 1 : gamma / gammaMax;
+    return SCALE_START_ANGLE + (SCALE_END_ANGLE - SCALE_START_ANGLE) * normalizedGamma;
 }
 
-class RotatorIndicator {
-	constructor(socket, compass) {
+class SWRMeterDisplay {
+	constructor(socket, swrMeterElement) {
 		this.socket = socket;
+		this.swrMeterElement = swrMeterElement;
 
-		this.oldTargetPosition = 0;
-		this.oldCurrentPosition = 0;
-		this.draggingIndicator = false;
+		if (!this.swrMeterElement) {
+			console.error("SWRMeterDisplay Error: swrMeterElement is null in constructor.");
+		}
+		this.needleDivElement = this.swrMeterElement ? this.swrMeterElement.querySelector('.indicator-needle') : null; 
+		if (!this.needleDivElement && this.swrMeterElement) {
+            console.error("SWRMeterDisplay Error: Could not find '.indicator-needle' within swrMeterElement.");
+        }
+		
+		this.currentSWRElement = document.getElementById('currentSWR');
+        this.statusBarClientsCountElement = document.getElementById('statusBarClientsCount'); 
+        this.statusIndicatorIconElement = document.getElementById('statusIndicatorIcon');
+        
+        if (!this.statusIndicatorIconElement) {
+            console.error("SWRMeterDisplay Error: Element with ID 'statusIndicatorIcon' not found.");
+        }
+        this.statusIndicatorCircle = this.statusIndicatorIconElement ? this.statusIndicatorIconElement.querySelector('circle') : null;
+		if (!this.statusIndicatorCircle && this.statusIndicatorIconElement) {
+            console.error("SWRMeterDisplay Error: Could not find 'circle' within statusIndicatorIconElement.");
+        }
 
-		this.compassContainer = compass;
-		this.azimuthIndicator = this.compassContainer.querySelector('.indicator-azimuth');
-		this.targetIndicator = this.compassContainer.querySelector('.indicator-target');
+        if (!this.currentSWRElement) console.error("SWRMeterDisplay Error: Element 'currentSWR' not found.");
+        if (!this.statusBarClientsCountElement) console.error("SWRMeterDisplay Error: Element 'statusBarClientsCount' not found.");
 
-		this.currentAzimuth = document.getElementById('currentAzimuth');
-		this.targetAzimuth = document.getElementById('targetAzimuth');
-		this.rotationSpeed = document.getElementById('rotationSpeed');
-    	this.movementIndicator = document.getElementById('movementIndicator');
-		this.azimuthInRoseDial = this.compassContainer.querySelector('.azimuth-label');
 
-		// this.compassContainer.addEventListener('click', this.handleMove.bind(this));
-		this.compassContainer.addEventListener('mousedown', this.handleMoveDown.bind(this));
-		this.compassContainer.addEventListener('touchstart', this.handleMoveDown.bind(this));
-
-		this.compassContainer.addEventListener('mousemove', this.handleMoveDrag.bind(this));
-		this.compassContainer.addEventListener('touchmove', this.handleMoveDrag.bind(this));
-
-		this.compassContainer.addEventListener('touchend', this.handleMoveUp.bind(this));
-		this.compassContainer.addEventListener('mouseup', this.handleMoveUp.bind(this));
-
-		this.socket.on('message', (socket, data) => {
-			this._handleSocketMessage(data);
-		});
+		if (this.socket) {
+            this.socket.on('message', (socket_ref, data) => {
+                this._handleSocketMessage(data);
+            });
+        } else {
+            console.warn("SWRMeterDisplay: Socket not provided in constructor.");
+        }
+        this.updateReadings(SWR_MIN, 0);
 	}
 
-	rotateIndicator(indicator, angle) {
-		indicator.style.transform = `rotateZ(${angle}deg)`;
+    swrToAngle(swr) {
+        return swrToAngleUtil(swr);
+    }
+
+	_rotateNeedle(angle) {
+		if (this.needleDivElement) { 
+            this.needleDivElement.style.transform = `rotateZ(${angle}deg)`;
+        }
 	}
 
-	calculateAzimuth(event) {
-		const boundingBox = this.compassContainer.getBoundingClientRect();
-		const centerX = boundingBox.left + boundingBox.width / 2;
-		const centerY = boundingBox.top + boundingBox.height / 2;
+	updateReadings(swr, clients) {
+        const currentSWRValue = Math.max(SWR_MIN, parseFloat(swr) || SWR_MIN);
 
-		const clickX = event.clientX || (event.changedTouches[0].pageX);
-		const clickY = event.clientY || (event.changedTouches[0].pageY);
+		if (this.currentSWRElement) {
+            this.currentSWRElement.textContent = currentSWRValue.toFixed(2);
+        }
+        if (this.statusBarClientsCountElement && (clients !== undefined && clients !== null)) {
+            this.statusBarClientsCountElement.textContent = String(parseInt(clients, 10));
+        } else if (this.statusBarClientsCountElement) {
+            this.statusBarClientsCountElement.textContent = "N/A";
+        }
 
-		const angle = Math.atan2(clickY - centerY, clickX - centerX);
-		const azimuth = (angle * (180 / Math.PI) + 360 + 90) % 360;
-		return azimuth;
-	}
-
-	handleMoveDown(event) {
-		if (!this.socket.isConnected())
-			return;
-
-		if (event.type === 'mousedown' && event.buttons !== 1)
-			return;
-
-		this.draggingIndicator = true;
-	}
-
-	handleMoveDrag(event) {
-		if (!this.draggingIndicator)
-			return;
-
-		const azimuth = this.calculateAzimuth(event);
-		this.rotateIndicator(this.targetIndicator, azimuth);
-	}
-
-	handleMoveUp(event) {
-		this.draggingIndicator = false;
-		const azimuth = this.calculateAzimuth(event);
-		const message = {
-			target_position: parseInt(azimuth, 10)
-		};
-		this.socket.send(message);
+		if (this.statusIndicatorCircle) {
+			if (currentSWRValue < SWR_INDICATE_LOW) {
+                this.statusIndicatorCircle.setAttribute('fill', 'rgba(0, 255, 0, 0.7)');
+            } else if (currentSWRValue < SWR_INDICATE_HIGH) {
+                this.statusIndicatorCircle.setAttribute('fill', 'rgba(255, 255, 0, 0.7)');
+            } else {
+                this.statusIndicatorCircle.setAttribute('fill', 'rgba(255, 0, 0, 0.7)');
+            }
+		}
+        
+        const angle = this.swrToAngle(currentSWRValue);
+		this._rotateNeedle(angle);
 	}
 
 	_handleSocketMessage(data) {
-		if (data.current_position !== undefined && data.target_position !== undefined && data.current_speed !== undefined) {
-			this._handlePositionUpdate(data);
+		if (data && data.currentSWR !== undefined) {
+			this.updateReadings(data.currentSWR, data.clients);
 		}
 	}
-
-	_handlePositionUpdate(data) {
-		const { current_position, target_position, current_speed } = data;
-
-		this.currentAzimuth.textContent = current_position % 360 + '°';
-		this.targetAzimuth.textContent = target_position % 360 + '°';
-		this.rotationSpeed.textContent = (current_speed / 255 * 100).toFixed(0) + '%';
-
-		if (current_speed === 0) {
-			this.movementIndicator.firstElementChild.setAttribute('fill', 'rgba(0, 255, 0, 0.5)');
-		} else {
-			this.movementIndicator.firstElementChild.setAttribute('fill', 'rgba(255, 0, 0, 1)');
-		}
-		//document.getElementById('movementIndicator').fill = 'rgba(255, 0, 0, 1)'
-
-		this.azimuthInRoseDial.textContent = current_position % 360;
-
-		if (current_position !== this.oldCurrentPosition) {
-			this.rotateIndicator(this.azimuthIndicator, current_position);
-			this.oldCurrentPosition = current_position;
-		}
-
-		if (target_position !== this.oldTargetPosition) {
-			if (!this.draggingIndicator) {
-				this.rotateIndicator(this.targetIndicator, target_position);
-			}
-			this.oldTargetPosition = target_position;
-		}
-	}
-
 }
 
-const btnLockOrientation = document.getElementById('btn-lock-orientation');
-const rotatorWindow = new RotatorWindow(btnLockOrientation);
+const createScale = svgElement => {
+    if (!svgElement) {
+        console.error("createScale Error: svgElement is null. Scale will not be drawn.");
+        return;
+    }
+    svgElement.innerHTML = '';
+    const centerX = 65, centerY = 65;
+    const scaleRadius = 55;
+    const tickShortLen = 3;
+    const tickLongLen = 6;
+    const labelRadiusOffset = 8;
+    const scaleFrag = document.createDocumentFragment();
+    const arcPath = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+    const startAngleRad = (SCALE_START_ANGLE - 90) * Math.PI / 180;
+    const endAngleRad = (SCALE_END_ANGLE - 90) * Math.PI / 180;
+    const arcStartX = centerX + scaleRadius * Math.cos(startAngleRad);
+    const arcStartY = centerY + scaleRadius * Math.sin(startAngleRad);
+    const arcEndX = centerX + scaleRadius * Math.cos(endAngleRad);
+    const arcEndY = centerY + scaleRadius * Math.sin(endAngleRad);
+    const largeArcFlag = (SCALE_END_ANGLE - SCALE_START_ANGLE) <= 180 ? "0" : "1";
+    arcPath.setAttribute('d', `M ${arcStartX} ${arcStartY} A ${scaleRadius} ${scaleRadius} 0 ${largeArcFlag} 1 ${arcEndX} ${arcEndY}`);
+    arcPath.setAttribute('stroke-width', '1');
+    arcPath.setAttribute('fill', 'none');
+    scaleFrag.appendChild(arcPath);
+    SWR_TICKS.forEach(tick => {
+        const angleDeg = swrToAngleUtil(tick.value);
+        const angleRad = (angleDeg - 90) * Math.PI / 180;
+        const tickLength = tick.label ? tickLongLen : tickShortLen;
+        const x1 = centerX + (scaleRadius - tickLength / 2) * Math.cos(angleRad);
+        const y1 = centerY + (scaleRadius - tickLength / 2) * Math.sin(angleRad);
+        const x2 = centerX + (scaleRadius + tickLength / 2) * Math.cos(angleRad);
+        const y2 = centerY + (scaleRadius + tickLength / 2) * Math.sin(angleRad);
+        const line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+        line.setAttribute('x1', String(x1));
+        line.setAttribute('y1', String(y1));
+        line.setAttribute('x2', String(x2));
+        line.setAttribute('y2', String(y2));
+        line.setAttribute('stroke-width', tick.label ? '1.0' : '0.5');
+        scaleFrag.appendChild(line);
+        if (tick.label) {
+            const labelRadius = scaleRadius - labelRadiusOffset - (tick.label === "1" ? 2 : 0);
+            const labelX = centerX + labelRadius * Math.cos(angleRad);
+            const labelY = centerY + labelRadius * Math.sin(angleRad);
+            const text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+            text.setAttribute('x', String(labelX));
+            text.setAttribute('y', String(labelY + 1));
+            text.textContent = tick.label;
+            scaleFrag.appendChild(text);
+        }
+    });
+    svgElement.appendChild(scaleFrag);
+};
+
 const rotatorNotifier = new RotatorNotifier();
 const rotatorSocket = new RotatorSocket(rotatorNotifier);
 rotatorSocket.setupWebSocket();
-const rotatorIndicator = new RotatorIndicator(rotatorSocket, document.getElementById('compass'));
 
-const renderCompass = svg => {
-	const centerX = 65;
-	const centerY = 65;
+const swrMeterElement = document.getElementById('swrMeter');
+const swrMeterDisplay = new SWRMeterDisplay(rotatorSocket, swrMeterElement);
 
-	const lineFrag = document.createDocumentFragment();
-	for (let i = 0; i < 360; i += 5) {
-		let start = 10;
-		let len = 3;
-		let width = 0.5;
-
-		if (i % 30 === 0) {
-			start = 10 - 2.5;
-			len = 9;
-			width = 1.0;
-		} else if (i % 10 === 0) {
-			len = 6;
-		}
-
-		const line = document.createElementNS("http://www.w3.org/2000/svg", 'line');
-		line.setAttribute('x1', centerX);
-		line.setAttribute('y1', start);
-		line.setAttribute('x2', centerX);
-		line.setAttribute('y2', start + len);
-		line.setAttribute('stroke-width', width);
-		line.setAttribute('transform', `rotate(${i} ${centerX} ${centerY})`);
-
-		if (i % 30 === 0) {
-			const label = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-			label.textContent = (i === 0 ? "\xa00°" : i);
-			label.setAttribute('x', centerX + Math.sin(Math.PI * (i / 180)) * (centerX * 0.95));
-			label.setAttribute('y', centerY - Math.cos(Math.PI * (i / 180)) * (centerY * 0.95));
-			lineFrag.appendChild(label);
-		}
-		lineFrag.appendChild(line);
-	}
-	svg.appendChild(lineFrag);
-}
+const scaleSvgElement = document.querySelector('.swr-meter_scale-dial');
+createScale(scaleSvgElement);
 
 async function updateHeader() {
-	const response = await fetch(`http://${window.location.hostname}/config`);
-	const data = await response.json();
-	if (data.settings.rotatorName) {
-		document.getElementById('rotatorTitle').innerText = data.settings.rotatorName;
-		document.title = data.settings.rotatorName;
-	}
+    try {
+        const response = await fetch(`http://${window.location.hostname}/config`);
+        if (!response.ok) {
+             console.warn(`Config fetch failed with status: ${response.status}`);
+        } else {
+            const data = await response.json();
+            if (data.settings && data.settings.meterName) {
+                document.getElementById('meterTitle').innerText = data.settings.meterName;
+                document.title = data.settings.meterName;
+                return;
+            } else if (data.settings && data.settings.rotatorName) {
+                 document.getElementById('meterTitle').innerText = data.settings.rotatorName + " (SWR)";
+                 document.title = data.settings.rotatorName + " (SWR)";
+                 return;
+            }
+        }
+    } catch (error) {
+        console.warn("Could not fetch/parse config for title:", error);
+    }
+    document.getElementById('meterTitle').innerText = "SWR Meter";
+    document.title = "SWR Meter";
 }
-
-
-renderCompass(document.querySelector('.compass_rose_dial'));
 updateHeader();
 
-
+document.querySelectorAll('.btn-popup').forEach(button => {
+    button.addEventListener('click', function() {
+        const popupHandle = this.dataset.name;
+        const popup = document.getElementById('popup');
+        if (popup) {
+            popup.querySelectorAll('.popup-inner').forEach(inner => inner.classList.remove('shown'));
+            const targetInner = popup.querySelector(`.popup-inner[data-handle="${popupHandle}"]`);
+            if (targetInner) {
+                targetInner.classList.add('shown');
+                popup.classList.add('shown');
+            }
+        }
+    });
+});
+const popupCloseButton = document.querySelector('.popup-close');
+if (popupCloseButton) {
+    popupCloseButton.addEventListener('click', function() {
+        const popup = document.getElementById('popup');
+        if (popup) {
+            popup.classList.remove('shown');
+        }
+    });
+}
 }());
 </script>
 </body>
